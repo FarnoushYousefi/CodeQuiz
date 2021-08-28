@@ -3,7 +3,7 @@ var time = questions.length * 15;
 var timerId;
 
 var questionEl = document.getElementById('questions');
-var timerEl = document.querySelector('#time');
+var timerEl = document.getElementById('time');
 var choicesE1 = document.getElementById('choices');
 var submitBtn = document.getElementById('submit');
 var startBtn = document.getElementById('start');
@@ -22,21 +22,27 @@ function startQuiz() {
 function getQuestion() {
   var currentQuestion = questions[currentQuestionIndex];
   var titleE1 = document.getElementById('question-title');
-  titleEl.textContent = currentQuestion.title;
+  titleE1.textContent = currentQuestion.title;
   choicesE1.innerHTML = '';
-  currentQuestion.foreach(function (choice, i) {
+  // loop over choices
+  currentQuestion.choices.forEach(function (choice, i) {
+    // create new button for each choice
     var choiceNode = document.createElement('button');
     choiceNode.setAttribute('class', 'choice');
     choiceNode.setAttribute('value', choice);
+
     choiceNode.textContent = i + 1 + '. ' + choice;
+
+    // attach click event listener to each choice
     choiceNode.onclick = questionClick;
 
+    // display on the page
     choicesE1.appendChild(choiceNode);
   });
 }
 
 function questionClick() {
-  if (this.value !== questios[currentQuestionIndex].answer) {
+  if (this.value !== questions[currentQuestionIndex].answer) {
     time -= 15;
     if (time < 0) {
       time = 0;
@@ -74,14 +80,14 @@ function quizEnd() {
   endScreenEl.removeAttribute('class');
   var finalScoreEl = document.getElementById('final-score');
   finalScoreEl.textContent = time;
-  questionsEl.setAttribute('class', 'hide');
+  questionEl.setAttribute('class', 'hide');
 }
 
 function saveHighscore() {
   var initials = initialsEl.value.trim();
 
   if (!initials !== '') {
-    var highScores =
+    var highscores =
       JSON.parse(window.localStorage.getItem('highscores')) || [];
 
     var newScore = {
@@ -89,9 +95,9 @@ function saveHighscore() {
       initials: initials,
     };
 
-    highScores.push(newScore);
+    highscores.push(newScore);
     window.localStorage.setItem('highscores', JSON.stringify(highscores));
-    window.location.href = 'higscores.html';
+    window.location.href = 'highscores.html';
   }
 }
 function checkForEnter(event) {
